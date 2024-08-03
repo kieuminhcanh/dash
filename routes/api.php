@@ -3,8 +3,16 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\EnsureDomainIsValid;
 
 
-Route::middleware(['guest'])->post('/login', [AuthController::class, 'login']);
-Route::middleware(['auth:sanctum'])->post('/logout', [AuthController::class, 'logout']);
-Route::middleware(['auth:sanctum'])->get('/user', [AuthController::class, 'user']);
+Route::middleware(['guest'])->group(function () {
+  Route::post('/login', [AuthController::class, 'login']);
+  // Other routes that don't require authentication
+});
+
+Route::middleware([EnsureDomainIsValid::class, 'auth:sanctum'])->group(function () {
+  Route::get('/logout', [AuthController::class, 'logout']);
+  Route::get('/user', [AuthController::class, 'user']);
+  // Other routes that require authentication
+});
