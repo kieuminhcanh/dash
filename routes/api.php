@@ -12,7 +12,7 @@ Route::middleware(['guest'])->group(function () {
 });
 
 Route::middleware([EnsureDomainIsValid::class, 'auth:sanctum'])->group(function () {
-  Route::get('/logout', [AuthController::class, 'logout']);
+  Route::post('/logout', [AuthController::class, 'logout']);
   Route::get('/user', [AuthController::class, 'user']);
   // Other routes that require authentication
 });
